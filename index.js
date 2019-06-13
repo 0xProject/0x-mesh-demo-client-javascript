@@ -8,14 +8,25 @@ console.log("Mesh WebSocket endpoint: ", MESH_WS_ENDPOINT);
 const websocketProvider = new Web3Providers.WebsocketProvider(MESH_WS_ENDPOINT);
 
 // Subscribe to the order events subscription
-console.log("About to subscribe...");
+console.log("About to subscribe to heartbeat...");
+websocketProvider
+  .subscribe("mesh_subscribe", "heartbeat", [])
+  .then(function(subscriptionId) {
+    console.log("Heartbeat subscriptionId", subscriptionId);
+    // Listen to event on the subscription (topic is the subscriptionId)
+    websocketProvider.on(subscriptionId, function(heartbeat) {
+      console.log("Received:", heartbeat);
+    });
+  });
+
+console.log("About to subscribe to order events...");
 websocketProvider
   .subscribe("mesh_subscribe", "orders", [])
   .then(function(subscriptionId) {
-    console.log("subscriptionId", subscriptionId);
+    console.log("Order events subscriptionId", subscriptionId);
     // Listen to event on the subscription (topic is the subscriptionId)
     websocketProvider.on(subscriptionId, function(event) {
-      console.log("Event Received:", JSON.stringify(event, null, "\t"));
+      console.log("Received:", JSON.stringify(event, null, "\t"));
     });
 
     // Submit an order to the Mesh node
