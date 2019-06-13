@@ -31,6 +31,11 @@ enum OrderEventKind {
     Fillability_increased = 'FILLABILITY_INCREASED',
 }
 
+interface OrderEventPayload {
+    subscription: string;
+    result: OrderEvent[];
+}
+
 interface OrderEvent {
     orderHash: string;
     signedOrder: StringifiedSignedOrder;
@@ -46,7 +51,6 @@ interface AcceptedOrderInfo {
 }
 
 enum RejectedKind {
-    Invalid = 'INVALID',
     Zeroex_validation = 'ZEROEX_VALIDATION',
     Mesh_error = 'MESH_ERROR',
     Mesh_validation = 'MESH_VALIDATION',
@@ -106,8 +110,8 @@ console.log('Mesh WebSocket endpoint: ', MESH_WS_ENDPOINT);
     const orderEventsSubscriptionId = await websocketProvider.subscribe('mesh_subscribe', 'orders', []);
     console.log('Order events subscriptionId', orderEventsSubscriptionId);
     // Listen to event on the subscription (topic is the subscriptionId)
-    const orderEventsCallback = (events: OrderEvent[]) => {
-        console.log('Received:', JSON.stringify(events, null, '\t'));
+    const orderEventsCallback = (eventPayload: OrderEventPayload) => {
+        console.log('Received:', JSON.stringify(eventPayload, null, '\t'));
     };
     websocketProvider.on(orderEventsSubscriptionId, orderEventsCallback as any);
 
