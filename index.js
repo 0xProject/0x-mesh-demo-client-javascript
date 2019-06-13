@@ -25,8 +25,8 @@ websocketProvider
   .then(function(subscriptionId) {
     console.log("Order events subscriptionId", subscriptionId);
     // Listen to event on the subscription (topic is the subscriptionId)
-    websocketProvider.on(subscriptionId, function(event) {
-      console.log("Received:", JSON.stringify(event, null, "\t"));
+    websocketProvider.on(subscriptionId, function(events) {
+      console.log("Received:", JSON.stringify(events, null, "\t"));
     });
 
     // Submit an order to the Mesh node
