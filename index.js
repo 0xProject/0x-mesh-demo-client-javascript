@@ -13,6 +13,16 @@ websocketProvider.connection.addEventListener("close", function() {
   process.exit(1);
  });
 
+ console.log('Subscribing to heartbeat...');
+ websocketProvider.subscribe('mesh_subscribe', 'heartbeat', []).then(function(subscriptionId) {
+     console.log('Heartbeat subscriptionId', subscriptionId);
+
+    // Listen to event on the subscription (topic is the subscriptionId)
+    websocketProvider.on(subscriptionId, function(eventPayload) {
+        console.log('Received:', JSON.stringify(eventPayload, null, '\t'));
+    });
+ });
+
 console.log('About to subscribe to order events...');
 websocketProvider
     .subscribe('mesh_subscribe', 'orders', [])

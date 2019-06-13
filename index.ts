@@ -98,11 +98,21 @@ console.log('Mesh WebSocket endpoint: ', MESH_WS_ENDPOINT);
 
     // Listen for the close event which will fire if Mesh goes down
     (websocketProvider as any).connection.addEventListener("close", () => {
-    console.log("close event received");
-    process.exit(1);
-   });
+        console.log("close event received");
+        process.exit(1);
+    });
 
-    console.log('About to subscribe to order events...');
+    console.log('Subscribing to heartbeat...');
+    const heartbeatSubscriptionId = await websocketProvider.subscribe('mesh_subscribe', 'heartbeat', []);
+    console.log('Heartbeat subscriptionId', heartbeatSubscriptionId);
+    // Listen to event on the subscription (topic is the subscriptionId)
+    const heartbeatCallback = (eventPayload: OrderEventPayload) => {
+        console.log('Received:', JSON.stringify(eventPayload, null, '\t'));
+    };
+    websocketProvider.on(heartbeatSubscriptionId, heartbeatCallback as any);
+
+
+    console.log('Subscribing to order events...');
     const orderEventsSubscriptionId = await websocketProvider.subscribe('mesh_subscribe', 'orders', []);
     console.log('Order events subscriptionId', orderEventsSubscriptionId);
     // Listen to event on the subscription (topic is the subscriptionId)
@@ -112,7 +122,7 @@ console.log('Mesh WebSocket endpoint: ', MESH_WS_ENDPOINT);
     websocketProvider.on(orderEventsSubscriptionId, orderEventsCallback as any);
 
     // Submit an order to the Mesh node
-    console.log('About to send order...');
+    console.log('Sending order...');
     var order = {
         makerAddress: '0xa3ece5d5b6319fa785efc10d3112769a46c6e149',
         takerAddress: '0x0000000000000000000000000000000000000000',
