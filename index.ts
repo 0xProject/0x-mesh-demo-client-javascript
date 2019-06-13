@@ -96,16 +96,6 @@ console.log('Mesh WebSocket endpoint: ', MESH_WS_ENDPOINT);
     // Instantiate the WebSocket provider/client
     const websocketProvider = new Web3Providers.WebsocketProvider(MESH_WS_ENDPOINT);
 
-    // Subscribe to the order events subscription
-    console.log('About to subscribe to heartbeat...');
-    const heartbeatSubscriptionId = await websocketProvider.subscribe('mesh_subscribe', 'heartbeat', []);
-    console.log('Heartbeat subscriptionId', heartbeatSubscriptionId);
-    // Listen to event on the subscription (topic is the subscriptionId)
-    const heartbeatCallback = (heartbeat: string) => {
-        console.log('Received:', heartbeat);
-    };
-    websocketProvider.on(heartbeatSubscriptionId, heartbeatCallback as any);
-
     console.log('About to subscribe to order events...');
     const orderEventsSubscriptionId = await websocketProvider.subscribe('mesh_subscribe', 'orders', []);
     console.log('Order events subscriptionId', orderEventsSubscriptionId);
