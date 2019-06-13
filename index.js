@@ -46,15 +46,9 @@ websocketProvider
             signature:
                 '0x1c52f75daa4bd2ad9e6e8a7c35adbd089d709e48ae86463f2abfafa3578747fafc264a04d02fa26227e90476d57bca94e24af32f1cc8da444bba21092ca56cd85603',
         };
-        var payload = {
-            jsonrpc: '2.0',
-            id: 2,
-            method: 'mesh_addOrders',
-            params: [[order]],
-        };
-        console.log('mesh_addOrders Payload:', JSON.stringify(payload, null, '\t'));
-        websocketProvider.sendPayload(payload).then(function(response) {
-            console.log('mesh_addOrders Response: ', JSON.stringify(response, null, '\t'));
+        const orders = [order];
+        websocketProvider.send('mesh_addOrders', [orders]).then(function(validationResults) {
+            console.log('mesh_addOrders Response: ', JSON.stringify(validationResults, null, '\t'));
         });
     })
     .catch(function(err) {

@@ -141,6 +141,7 @@ console.log('Mesh WebSocket endpoint: ', MESH_WS_ENDPOINT);
         params: [[order]],
     };
     console.log('mesh_addOrders Payload:', JSON.stringify(payload, null, '\t'));
-    const response: ValidationResults = await (websocketProvider as any).sendPayload(payload);
-    console.log('mesh_addOrders Response: ', JSON.stringify(response, null, '\t'));
+    const orders = [order];
+    const validationResults: ValidationResults = await (websocketProvider as any).send('mesh_addOrders', [orders]);
+    console.log('mesh_addOrders Response: ', JSON.stringify(validationResults, null, '\t'));
 })();
