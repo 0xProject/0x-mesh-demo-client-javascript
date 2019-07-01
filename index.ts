@@ -97,8 +97,8 @@ console.log('Mesh WebSocket endpoint: ', MESH_WS_ENDPOINT);
     const websocketProvider = new Web3Providers.WebsocketProvider(MESH_WS_ENDPOINT);
 
     // Listen for the close event which will fire if Mesh goes down
-    (websocketProvider as any).connection.addEventListener("close", () => {
-        console.log("close event received");
+    (websocketProvider as any).connection.addEventListener('close', () => {
+        console.log('close event received');
         process.exit(1);
     });
 
@@ -110,7 +110,6 @@ console.log('Mesh WebSocket endpoint: ', MESH_WS_ENDPOINT);
         console.log('Received:', JSON.stringify(eventPayload, null, '\t'));
     };
     websocketProvider.on(heartbeatSubscriptionId, heartbeatCallback as any);
-
 
     console.log('Subscribing to order events...');
     const orderEventsSubscriptionId = await websocketProvider.subscribe('mesh_subscribe', 'orders', []);
