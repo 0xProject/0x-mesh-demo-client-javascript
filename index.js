@@ -60,3 +60,23 @@ websocketProvider
     .catch(function(err) {
         console.log('Error:', err);
     });
+
+(async () => {
+    // Get all orders stored in Mesh at a snapshot in time
+    const perPage = 200;
+    let snapshotID = ''; // New snapshot
+    let ordersInfosLen = 1;
+
+    let i = 0;
+    const allOrdersInfos = [];
+    while (ordersInfosLen !== 0) {
+        const page = i;
+        const getOrdersResponse = await websocketProvider.send('mesh_getOrders', [page, perPage, snapshotID]);
+        console.log('mesh_getOrders Response:', JSON.stringify(getOrdersResponse, null, '\t'));
+        snapshotID = getOrdersResponse.snapshotID;
+        allOrdersInfos.push(...getOrdersResponse.ordersInfos);
+        ordersInfosLen = getOrdersResponse.ordersInfos.length;
+        i++;
+    }
+    console.log('Got ', allOrdersInfos.length, 'orders from snapshot ', snapshotID);
+})();

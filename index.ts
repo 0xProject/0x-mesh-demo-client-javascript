@@ -90,6 +90,11 @@ interface ValidationResults {
     rejected: RejectedOrderInfo[];
 }
 
+interface GetOrdersResponse {
+    snapshotID: string;
+    ordersInfos: AcceptedOrderInfo[];
+}
+
 console.log('Mesh WebSocket endpoint: ', MESH_WS_ENDPOINT);
 
 (async () => {
@@ -142,4 +147,26 @@ console.log('Mesh WebSocket endpoint: ', MESH_WS_ENDPOINT);
     const orders = [order];
     const validationResults: ValidationResults = await (websocketProvider as any).send('mesh_addOrders', [orders]);
     console.log('mesh_addOrders Response: ', JSON.stringify(validationResults, null, '\t'));
+
+    // Get all orders stored in Mesh at a snapshot in time
+    const perPage = 200;
+    let snapshotID = ''; // New snapshot
+    let ordersInfosLen = 1;
+
+    let i = 0;
+    const allOrdersInfos = [];
+    while (ordersInfosLen !== 0) {
+        const page = i;
+        const getOrdersResponse: GetOrdersResponse = await (websocketProvider as any).send('mesh_getOrders', [
+            page,
+            perPage,
+            snapshotID,
+        ]);
+        console.log('mesh_getOrders Response:', JSON.stringify(getOrdersResponse, null, '\t'));
+        snapshotID = getOrdersResponse.snapshotID;
+        allOrdersInfos.push(...getOrdersResponse.ordersInfos);
+        ordersInfosLen = getOrdersResponse.ordersInfos.length;
+        i++;
+    }
+    console.log('Got ', allOrdersInfos.length, 'orders from snapshot ', snapshotID);
 })();
