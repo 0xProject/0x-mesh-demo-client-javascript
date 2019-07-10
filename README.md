@@ -1,3 +1,8 @@
+# :no_entry: DEPRECATED :no_entry:
+
+Moved to the [0x Mesh repo examples directory](https://github.com/0xProject/0x-mesh/tree/development/examples/javascript_websocket_client).
+
+
 ## Example 0x Mesh WebSocket Client in Javascript & Typescript
 
 This repo contains a very simple example of using [web3-providers](https://www.npmjs.com/package/web3-providers)'s `WebsocketProvider` as a client for interacting with [0x Mesh](https://github.com/0xProject/0x-mesh)'s WebSocket endpoints.
